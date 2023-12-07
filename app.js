@@ -1,28 +1,26 @@
 const express = require('express')
-const app = express();
+const app = express()
+const logger = require('./logger')
+const authorize = require('./authorize')
 
-const { products } = require('./data')
+//* app.use() applies the middleware to all the Methods that are mentioned after the app.use() statement
+app.use([logger, authorize])
+//* the path means that 
+//* this logger will apply to all the endpoints starting with '/api' and not to others
+//* as the middleware doesnt know what all endPoints are defined
+//* the middleware runs successfully even though the endpoint is not defined
 
 app.get('/', (req, res) => {
-  res.status(200).send(
-    `<h1>Welcome to the HOME page</h1>
-    <p><a href='/api/products'>Click here</a> To GET all products list</p>`
-  )
+  res.send("HOME PAGE")
+})
+app.get('/about', (req, res) => {
+  res.send("ABOUT PAGE")
 })
 app.get('/api/products', (req, res) => {
-  const allGistProducts = products.map((product) => {
-    const { id, name, image } = product
-    return { id, name, image, info: "forNowNothing" }
-  })
-  res.status(200).json(allGistProducts)
+  res.send("PRODUCTS LIST")
 })
-app.get('/api/products/:productId', (req, res) => {
-  const { productId } = req.params; //* is an object with all the params mentioned in the app.get() url
-  const requestedPdt = products.find((product) => product.id === Number(productId))
-  if (!requestedPdt) {
-    res.status(404).send("Product Does Not Exist")
-  }
-  res.status(200).json(requestedPdt)
+app.get('/api/items', (req, res) => {
+  res.send("ITEMS LIST")
 })
 
-app.listen(5000, () => { console.log("server listening on port 5000") });
+app.listen(5000, () => { console.log("server listening on port 5000") })
