@@ -3,8 +3,8 @@ const logger = (req, res, next) => {
   const url = req.url
   const time = new Date().getFullYear()
   console.log(method, url, time)
-  //*can do this or......
   // res.send("inside the MiddleWare")
+  //*can do this or......
 
   //*this
   next()
